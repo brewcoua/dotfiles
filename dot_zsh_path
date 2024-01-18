@@ -1,0 +1,58 @@
+############################################
+# Path                                     #
+############################################
+
+########################
+## Local              ##
+########################
+
+if [ -d "$HOME/.local/bin" ]; then
+	export PATH="$HOME/.local/bin:$PATH"
+fi
+
+########################
+## NVM                ##
+########################
+
+if [ -d "$HOME/.nvm" ]; then
+	export NVM_DIR="$HOME/.nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completio
+fi
+
+########################
+## Bun                ##
+########################
+
+if [ -d "$HOME/.bun" ]; then
+	export BUN_INSTALL="$HOME/.bun"
+	export PATH="$BUN_INSTALL/bin:$PATH"
+	[ -s "/home/brewen/.bun/_bun" ] && source "/home/brewen/.bun/_bun" # completions
+fi
+
+########################
+## Bum                ##
+########################
+
+if [ -d "$HOME/.bum" ]; then
+	export BUM_INSTALL="$HOME/.bum"
+	export PATH="$BUM_INSTALL/bin:$PATH"
+fi
+
+#######################
+## Cargo (Rust)      ##
+#######################
+
+if [ -d "$HOME/.cargo" ]; then
+	export CARGO_INSTALL="$HOME/.cargo"
+	export PATH="$CARGO_INSTALL/bin:$PATH"
+fi
+
+#######################
+## Opam (OCaml)      ##
+#######################
+
+if [ -d "$HOME/.opam" ]; then
+	[[ ! -r /home/brewen/.opam/opam-init/init.zsh ]] || source /home/brewen/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+fi
+
