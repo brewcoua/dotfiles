@@ -1,0 +1,34 @@
+############################################
+# Profile (Run at login)                   #
+############################################
+
+# Bash
+if [ -n "$BASH_VERSION" ]; then
+    # include .bashrc if it exists
+    if [ -f "$HOME/.bashrc" ]; then
+	. "$HOME/.bashrc"
+    fi
+fi
+
+# Zsh
+if [ -n "$ZSH_VERSION" ]; then
+    # include .zshrc if it exists
+    if [ -f "$HOME/.zshrc" ]; then
+        . "$HOME/.zshrc"
+    fi
+fi
+
+# Add user's private bin
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+
+# Add Toolbox scripts to path
+export PATH="$PATH:/home/brewen/.local/share/JetBrains/Toolbox/scripts"
+
+# Load Cargo env
+. "$HOME/.cargo/env"
