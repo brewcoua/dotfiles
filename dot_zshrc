@@ -14,29 +14,19 @@ plugins=(ubuntu git aliases bun nvm python)
 source $ZSH/oh-my-zsh.sh
 autoload zmv
 
-
-
-############################################
-# User configuration                       #
-############################################
-
-EDITOR='vim'
-
-if [ -f ~/.zsh_aliases ]; then
-	source ~/.zsh_aliases
-fi
-
-if [ -f ~/.zsh_path ]; then
-	source ~/.zsh_path
+if [ -f "$HOME/.zaliases" ]; then
+	. "$HOME/.zaliases"
 fi
 
 ############################################
-# GPG                                      #
+# Completions                              #
 ############################################
 
-if ! (( $+commands["gpg"] )); then
-	export GPG_TTY="$(tty)"
-	export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-	gpg-connect-agent updatestartuptty /bye > /dev/null
+if [ -d "$HOME/.nvm" ]; then
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
+
+if [ -d "$HOME/.bun" ]; then
+	[ -s "/home/brewen/.bun/_bun" ] && source "/home/brewen/.bun/_bun"
 fi
 
