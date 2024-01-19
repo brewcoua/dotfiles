@@ -1,0 +1,41 @@
+{{- if eq .chezmoi.os "linux" -}}
+
+{{- $sudo := "sudo " -}}
+{{- if eq .chezmoi.username "root" -}}
+{{-   $sudo = "" -}}
+{{- end -}}
+
+{{- $packageList := list -}}
+{{- $repositoryList := list -}}
+
+{{- $packageRefs := list .packages.shared -}}
+{{- if eq .osid "linux-ubuntu" -}}
+{{-   $repositoryList = mustAppend $packageRefs .packages.ubuntu -}}
+{{- else if eq .osid "linux-debian" -}}
+{{-   $repositoryList = mustAppend $packageRefs .packages.debian -}}
+{{- end -}}
+
+{{- range $packageRefs -}}
+{{-   $packageRef := . -}}
+{{-   range $packageRef -}}
+{{-     $package := . -}}
+{{-     if hasKey $package "name" -}}
+{{-       $packageList = mustAppend $packageList $package.name -}}
+{{-     end -}}
+{{-     if hasKey $package "repository" -}}
+{{-       $repositoryList = mustAppend $repositoryList $package.repository -}}
+{{-     end -}}
+{{-   end -}}
+{{- end -}}
+
+#!/bin/bash
+set -eufo pipefail
+
+{{- range $repositoryList -}}
+{{ $sudo }}add-apt-repository {{ . }}
+{{- end -}}
+
+{{ $sudo }}apt-get update
+{{ $sudo }}apt-get install -y {{ $packageList | join " " }}
+
+{{- end -}}

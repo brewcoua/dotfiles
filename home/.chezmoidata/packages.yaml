@@ -1,0 +1,11 @@
+packages:
+  shared:
+    - name: zsh
+    - name: git
+    - name: gnupg
+    - name: curl
+    - name: wget
+  ubuntu:
+    - name: "papirus-icon-theme"
+      repository: "ppa:papirus/papirus"
+  debian: []

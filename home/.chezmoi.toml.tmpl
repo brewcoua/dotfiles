@@ -20,7 +20,7 @@
 {{- end -}}
 
 {{- if not $ephemeral -}}
-{{-   if eq $hostname "brewen-laptop-hp" -}}
+{{-   if eq (substr 0 9 $hostname) "brewcoua-" -}}
 {{-     $personal = true -}}
 {{-   else if stdinIsATTY -}}
 {{-     $headless = promptBoolOnce . "headless" "headless" -}}
