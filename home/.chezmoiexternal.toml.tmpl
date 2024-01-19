@@ -1,0 +1,27 @@
+[".oh-my-zsh"]
+  type = "archive"
+  url = "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
+  stripComponents = 1
+  exact = true
+  refreshPeriod = "168h"
+
+{{- $powerlevel10kVersionTag := (gitHubLatestRelease "romkatv/powerlevel10k").TagName }}
+[".oh-my-zsh/custom/themes/powerlevel10k"]
+  type = "archive"
+  url = "https://github.com/romkatv/powerlevel10k/archive/{{ $powerlevel10kVersionTag }}.tar.gz"
+  stripComponents = 1
+  exact = true
+
+{{- if and (not .ephemeral) (not .headless) }}
+{{-   $fontDir := ".local/share/fonts" }}
+{{-   range (list
+        "MesloLGS NF Regular.ttf"
+        "MesloLGS NF Bold.ttf"
+        "MesloLGS NF Italic.ttf"
+        "MesloLGS NF Bold Italic.ttf") }}
+["{{ $fontDir }}/{{ . }}"]
+    type = "file"
+    url = "https://github.com/romkatv/powerlevel10k-media/raw/master/{{ . }}"
+    refreshPeriod = "168h"
+{{-   end }}
+{{- end }}

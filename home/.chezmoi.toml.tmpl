@@ -1,0 +1,43 @@
+{{- $ephemeral := false -}}{{/* Cloud or VM instances */}}
+{{- $headless := false -}}{{/* No screen and keyboard */}}
+{{- $personal := false -}}{{/* Should be using personal secrets */}}
+{{- "" -}}
+
+{{- $osID := .chezmoi.os -}}
+{{- if (and (eq .chezmoi.os "linux") (hasKey .chezmoi.osRelease "id")) -}}
+{{-   $osID = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{- end -}}
+
+{{- if or (env "CODESPACES") (env "REMOTE_CONTAINER_IPC") (eq .chezmoi.username "root" "ubuntu" "vagrant" "vscode") -}}
+{{-   $ephemeral = true -}}
+{{-   $headless = true -}}
+{{- end -}}
+
+{{- $hostname := .chezmoi.hostname -}}
+
+{{- if eq .chezmoi.os "windows" -}}
+{{-   $ephemeral = true -}}
+{{- end -}}
+
+{{- if not $ephemeral -}}
+{{-   if eq $hostname "brewen-laptop-hp" -}}
+{{-     $personal = true -}}
+{{-   else if stdinIsATTY -}}
+{{-     $headless = promptBoolOnce . "headless" "headless" -}}
+{{-     $ephemeral = promptBoolOnce . "ephemeral" "ephemeral" -}}
+{{-   else -}}
+{{-     $ephemeral = true -}}
+{{-     $headless = true -}}
+{{-   end -}}
+{{- end -}}
+
+[data]
+    hostname = {{ $hostname | quote }}
+    osid = {{ $osID | quote }}
+    
+    ephemeral = {{ $ephemeral }}
+    headless = {{ $headless }}
+    personal = {{ $personal }}
+
+[github]
+    refreshPeriod = "12h"
