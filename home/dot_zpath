@@ -12,7 +12,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 
-## Jetbrains Toolbox
+## JetBrains Toolbox
 
 if [ -d "$HOME/.local/share/JetBrains/Toolbox" ]; then
      export TOOLBOX_INSTALL="$HOME/.local/share/JetBrains/Toolbox"

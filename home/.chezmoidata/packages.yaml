@@ -1,10 +1,9 @@
 packages:
-  shared:
+  apt:
     - name: zsh
     - name: git
-    - name: gnupg
-    - name: curl
-    - name: wget
+    - name: gnupg gpg
+    - name: curl wget
 
     - name: neovim
     - name: terminator
@@ -27,5 +26,7 @@ packages:
     - name: gnome-tweaks
     - name: papirus-icon-theme
       repository: "ppa:papirus/papirus"
-  ubuntu: []
-  debian: []
+
+  snap:
+    - firefox
+  

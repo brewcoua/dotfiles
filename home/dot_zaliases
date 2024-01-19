@@ -2,5 +2,7 @@
 # Aliases                                  #
 ############################################
 
-alias zcp="zmv -C" zln="zmv -L"
+alias g="git"
+alias gnp="git --no-pager"
 
+alias zcp="zmv -C" zln="zmv -L"

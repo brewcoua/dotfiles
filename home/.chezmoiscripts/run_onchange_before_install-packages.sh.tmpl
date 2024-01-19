@@ -8,23 +8,13 @@
 {{ $packageList := list -}}
 {{ $repositoryList := list -}}
 
-{{ $packageRefs := list .packages.shared -}}
-{{ if eq .osid "linux-ubuntu" -}}
-{{   $packageRefs = mustAppend $packageRefs .packages.ubuntu -}}
-{{ else if eq .osid "linux-debian" -}}
-{{   $packageRefs = mustAppend $packageRefs .packages.debian -}}
-{{ end -}}
-
-{{ range $packageRefs -}}
-{{   $packageRef := . -}}
-{{   range $packageRef -}}
-{{     $package := . -}}
-{{     if hasKey $package "name" -}}
-{{       $packageList = mustAppend $packageList $package.name -}}
-{{     end -}}
-{{     if hasKey $package "repository" -}}
-{{       $repositoryList = mustAppend $repositoryList $package.repository -}}
-{{     end -}}
+{{ range .packages.apt -}}
+{{   $package := . -}}
+{{   if hasKey $package "name" -}}
+{{     $packageList = mustAppend $packageList $package.name -}}
+{{   end -}}
+{{   if hasKey $package "repository" -}}
+{{     $repositoryList = mustAppend $repositoryList $package.repository -}}
 {{   end -}}
 {{ end -}}
 
@@ -40,7 +30,7 @@ set -eufo pipefail{{ "\n" }}
 {{ $sudo }}apt-get install -y {{ $packageList | join " " }}
 
 {{ if lookPath "snap" }}
-{{   range .snaps }}
+{{   range .packages.snap }}
 if snap list {{ . }} &> /dev/null; then
     SNAP_NAME={{ . }}
     SNAP_INFO=$(snap info $SNAP_NAME)

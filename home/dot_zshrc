@@ -5,29 +5,37 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-############################################
-# Oh My Zsh                                #
-############################################
-
 export ZSH="$HOME/.oh-my-zsh"
+export ZSH_COMPDUMP="$ZSH/cache/.zcompdump-$HOST"
 
 # https://github.com/romkatv/powerlevel10k
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-zstyle ':omz:update' mode auto      # update automatically without asking
+DISABLE_AUTO_UPDATE="true"
 
-plugins=(ubuntu git aliases bun nvm python)
+HIST_STAMPS="yyyy-mm-dd"
+
+plugins=(
+	per-directory-history
+	zsh-syntax-highlighting
+)
 
 source $ZSH/oh-my-zsh.sh
 autoload zmv
+
+# User configuration
+
+setopt autocd
+setopt histignorespace
+setopt rm_star_silent
+
 
 if [ -f "$HOME/.zaliases" ]; then
 	. "$HOME/.zaliases"
 fi
 
-############################################
-# Completions                              #
-############################################
+
+# Completions
 
 if [ -d "$HOME/.nvm" ]; then
 	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
