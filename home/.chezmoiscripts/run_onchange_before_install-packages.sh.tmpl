@@ -1,0 +1,67 @@
+{{ if eq .chezmoi.os "linux" -}}
+
+{{ $sudo := "sudo " -}}
+{{ if eq .chezmoi.username "root" -}}
+{{   $sudo = "" -}}
+{{ end -}}
+
+{{ $packageList := list -}}
+{{ $repositoryList := list -}}
+
+{{ $packageRefs := list .packages.shared -}}
+{{ if eq .osid "linux-ubuntu" -}}
+{{   $packageRefs = mustAppend $packageRefs .packages.ubuntu -}}
+{{ else if eq .osid "linux-debian" -}}
+{{   $packageRefs = mustAppend $packageRefs .packages.debian -}}
+{{ end -}}
+
+{{ range $packageRefs -}}
+{{   $packageRef := . -}}
+{{   range $packageRef -}}
+{{     $package := . -}}
+{{     if hasKey $package "name" -}}
+{{       $packageList = mustAppend $packageList $package.name -}}
+{{     end -}}
+{{     if hasKey $package "repository" -}}
+{{       $repositoryList = mustAppend $repositoryList $package.repository -}}
+{{     end -}}
+{{   end -}}
+{{ end -}}
+
+#!/bin/bash
+set -eufo pipefail{{ "\n" }}
+
+{{- range $repositoryList -}}
+{{ $sudo }}add-apt-repository -y {{ . }}
+{{- end -}}
+
+{{ "\n" }}
+{{ $sudo }}apt-get update
+{{ $sudo }}apt-get install -y {{ $packageList | join " " }}
+
+{{ if lookPath "snap" }}
+{{   range .snaps }}
+if snap list {{ . }} &> /dev/null; then
+    SNAP_NAME={{ . }}
+    SNAP_INFO=$(snap info $SNAP_NAME)
+
+    INSTALLED_VERSION=$(echo "$SNAP_INFO" | grep "installed:" | awk '{print $2}')
+    
+    CHANNEL_INFO=$(echo "$SNAP_INFO" | grep "channels:" -A 1 | tail -n 1)
+    LATEST_VERSION=$(echo "$CHANNEL_INFO" | awk '{print $2}')
+    CHANNEL=$(echo "$CHANNEL_INFO" | awk '{print $1}')
+    
+    if [ "$INSTALLED_VERSION" != "$LATEST_VERSION" ]; then
+        echo "snap> Updating $SNAP_NAME ($CHANNEL $LATEST_VERSION)"
+        {{ $sudo }}snap refresh $SNAP_NAME
+    else
+        echo "snap> $SNAP_NAME already at the latest version ($CHANNEL $LATEST_VERSION)"
+    fi
+else
+    echo "snap> Installing {{ . }}"
+    {{ $sudo }}snap install {{ . }}
+fi
+{{   end }}
+{{ end }}
+
+{{- end -}}

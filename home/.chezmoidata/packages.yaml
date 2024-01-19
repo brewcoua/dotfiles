@@ -5,7 +5,27 @@ packages:
     - name: gnupg
     - name: curl
     - name: wget
-  ubuntu:
-    - name: "papirus-icon-theme"
+
+    - name: neovim
+    - name: terminator
+
+    - name: gnupg-agent
+    - name: dirmngr
+    - name: cryptsetup
+    - name: scdaemon
+    - name: pcscd
+    - name: secure-delete
+    - name: hopenpgp-tools
+    - name: yubikey-personalization
+
+    - name: build-essential
+    - name: gcc
+    - name: g++
+    - name: make
+    - name: cmake
+
+    - name: gnome-tweaks
+    - name: papirus-icon-theme
       repository: "ppa:papirus/papirus"
+  ubuntu: []
   debian: []
