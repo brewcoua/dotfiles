@@ -10,9 +10,9 @@
 
 {{- $packageRefs := list .packages.shared -}}
 {{- if eq .osid "linux-ubuntu" -}}
-{{-   $repositoryList = mustAppend $packageRefs .packages.ubuntu -}}
+{{-   $packageRefs = mustAppend $packageRefs .packages.ubuntu -}}
 {{- else if eq .osid "linux-debian" -}}
-{{-   $repositoryList = mustAppend $packageRefs .packages.debian -}}
+{{-   $packageRefs = mustAppend $packageRefs .packages.debian -}}
 {{- end -}}
 
 {{- range $packageRefs -}}
@@ -29,12 +29,13 @@
 {{- end -}}
 
 #!/bin/bash
-set -eufo pipefail
+set -eufo pipefail{{ "\n" }}
 
 {{- range $repositoryList -}}
 {{ $sudo }}add-apt-repository {{ . }}
 {{- end -}}
 
+{{ "\n" }}
 {{ $sudo }}apt-get update
 {{ $sudo }}apt-get install -y {{ $packageList | join " " }}
 
