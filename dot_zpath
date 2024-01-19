@@ -37,14 +37,6 @@ if [ -d "$HOME/.bun" ]; then
 fi
 
 
-## Bum (Bun)
-
-if [ -d "$HOME/.bum" ]; then
-	export BUM_INSTALL="$HOME/.bum"
-	export PATH="$BUM_INSTALL/bin:$PATH"
-fi
-
-
 ## Cargo (Rust)
 
 if [ -d "$HOME/.cargo" ]; then
