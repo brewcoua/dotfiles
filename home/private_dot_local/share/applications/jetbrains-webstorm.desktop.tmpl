@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.4
+Type=Application
+Name=WebStorm
+Comment=The smartest JavaScript IDE
+Categories=Development;IDE;
+Icon={{ env "HOME" }}/.local/share/{{ .jetbrains.folder }}/icons/webstorm
+
+Exec={{ trimSuffix "\n" (output "systemd-path" "user-binaries") }}/webstorm %f
+
+Terminal=false
+StartupWMClass=jetbrains-webstorm
+StartupNotify=true

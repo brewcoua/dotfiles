@@ -1,5 +1,5 @@
 jetbrains:
-  folder: "apps"
+  folder: "JetBrains"
   ide:
     - name: idea
       code: IIU

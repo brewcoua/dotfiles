@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.4
+Type=Application
+Name=RustRover
+Comment=Focus on what matters
+Categories=Development;IDE;
+Icon={{ env "HOME" }}/.local/share/{{ .jetbrains.folder }}/icons/rustrover
+
+Exec={{ trimSuffix "\n" (output "systemd-path" "user-binaries") }}/rustrover %f
+
+Terminal=false
+StartupWMClass=jetbrains-rustrover
+StartupNotify=true

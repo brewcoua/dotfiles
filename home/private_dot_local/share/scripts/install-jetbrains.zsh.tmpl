@@ -1,6 +1,8 @@
 #!/bin/zsh
 
-install_folder="${XDG_DATA_HOME:-$HOME/.local/share}/{{ .jetbrains.folder }}"
+base_folder="${XDG_DATA_HOME:-$HOME/.local/share}/{{ .jetbrains.folder }}"
+install_folder="$base_folder/apps"
+icons_folder="$base_folder/icons"
 binary_folder=$(systemd-path user-binaries)
 
 {{ $os := .chezmoi.os }}
@@ -12,6 +14,7 @@ binary_folder=$(systemd-path user-binaries)
 {{   end }}
 
 binary_target="$binary_folder/{{ $ide.name }}"
+icon_target="$icons_folder/{{ $ide.name }}"
 
 download_folder=$(mktemp --directory)
 echo "[{{ $ide.name }}] Working in $download_folder"
@@ -129,19 +132,28 @@ else
         exit 1
     fi
 
-    #if [ -f "$latest_icon" ]; then
-    #    echo "[{{ $ide.name }}] $latest_icon is a file"
-    #else
-    #    echo "[{{ $ide.name }}] Error: $latest_icon is not a file" 1>&2
-    #    exit 1
-    #fi
+    if [ -f "$latest_icon" ]; then
+        echo "[{{ $ide.name }}] $latest_icon is a file"
+    else
+        echo "[{{ $ide.name }}] Error: $latest_icon is not a file" 1>&2
+        exit 1
+    fi
 
-    #if ln --symbolic --force "$latest_icon" "$icon_target"; then
-    #    echo "[{{ $ide.name }}] Linked $latest_icon to $icon_target"
-    #else
-    #    echo "[{{ $ide.name }}] Error: failed to link $latest_icon to $icon_target" 1>&2
-    #    exit 1
-    #fi
+    if ! [ -d "$icons_folder" ]; then
+        if mkdir --parents "$icons_folder"; then
+            echo "[{{ $ide.name }}] Created install folder $icons_folder"
+        else
+            echo "[{{ $ide.name }}] Error: failed to create install folder $icons_folder" 1>&2
+            exit 1
+        fi
+    fi
+
+    if ln --symbolic --force "$latest_icon" "$icon_target"; then
+        echo "[{{ $ide.name }}] Linked $latest_icon to $icon_target"
+    else
+        echo "[{{ $ide.name }}] Error: failed to link $latest_icon to $icon_target" 1>&2
+        exit 1
+    fi
 
     if rm --recursive --force "$download_folder"; then
         echo "[{{ $ide.name }}] Cleaned up $download_folder"
@@ -150,9 +162,11 @@ else
         exit 1
     fi
 
-    notify-send --app-name "jetbrains-installer" \
-        --urgency low \
-        "{{ $ide.name }} $latest_version installed"
+    notify-send -a "jetbrains-installer" \
+        -u low \
+        -i "$icon_target"
+        "{{ $ide.name }} $latest_version"
+        "Successfully updated {{ $ide.name }} to its latest version."
     
     for version in "${leftover_versions[@]}"; do
         if rm --recursive --force "$install_folder/$version"; then

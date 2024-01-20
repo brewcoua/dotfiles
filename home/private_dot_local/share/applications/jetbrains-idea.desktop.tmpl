@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.4
+Type=Application
+Name=IntelliJ IDEA Ultimate Edition
+Comment=Capable and Ergonomic IDE for JVM
+Categories=Development;IDE;
+Icon={{ env "HOME" }}/.local/share/{{ .jetbrains.folder }}/icons/idea
+
+Exec={{ trimSuffix "\n" (output "systemd-path" "user-binaries") }}/idea %f
+
+Terminal=false
+StartupWMClass=jetbrains-idea
+StartupNotify=true
