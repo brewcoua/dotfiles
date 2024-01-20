@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 alias g="git"
 alias gnp="git --no-pager"
 

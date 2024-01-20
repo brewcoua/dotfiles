@@ -11,6 +11,7 @@ nix profile install flake:nixpkgs#jetbrains.{{ $ide }} --impure
 {{   range($jetbrains.plugin) -}}
 {{ $ide }} installPlugins {{ . }}
 {{   end -}}
+ln -s "$HOME/.nix-profile/share/applications/{{ $ide }}.desktop"  "$HOME/.local/share/applications"
 {{ end -}}
 
 {{ end -}}
