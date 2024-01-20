@@ -1,0 +1,10 @@
+[Unit]
+Description=Check for latest updates for JetBrains IDEs
+
+[Timer]
+OnCalendar=daily
+AccuracySec=12h
+Persistent=true
+
+[Install]
+WantedBy=basic.target

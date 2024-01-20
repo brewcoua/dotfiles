@@ -1,0 +1,19 @@
+#!/bin/bash
+
+{{ $sudo := "sudo " -}}
+{{ if eq .chezmoi.username "root" -}}
+{{   $sudo = "" -}}
+{{ end -}}
+
+{{range(list
+    "jetbrains-installer") }}
+if ! systemctl is-enabled --user {{ . }}.service > /dev/null; then
+    {{ $sudo }}systemctl enable --user {{ . }}.service
+fi
+if ! systemctl is-enabled --user {{ . }}.timer > /dev/null; then
+    {{ $sudo }}systemctl enable --user {{ . }}.timer
+fi
+if ! systemctl is-active --user {{ . }}.timer > /dev/null; then
+    {{ $sudo }}systemctl start --user {{ . }}.timer
+fi
+{{ end }}

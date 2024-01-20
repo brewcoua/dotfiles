@@ -1,0 +1,9 @@
+[Unit]
+Description=Check for latest updates for JetBrains IDEs
+
+[Service]
+Type=simple
+ExecStart=zsh /home/{{ .chezmoi.username }}/scripts/install-jetbrains.zsh
+
+[Install] 
+WantedBy=multi-user.target

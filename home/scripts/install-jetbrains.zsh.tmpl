@@ -1,0 +1,161 @@
+#!/bin/zsh
+
+install_folder="${XDG_DATA_HOME:-$HOME/.local/share}/{{ .jetbrains.folder }}"
+binary_folder=$(systemd-path user-binaries)
+
+{{ $os := .chezmoi.os }}
+{{ range(.jetbrains.ide) }}
+{{   $ide := . }}
+{{   $releaseType := "release" }}
+{{   if hasKey $ide "type" }}
+{{     $releaseType = $ide.type }}
+{{   end }}
+
+binary_target="$binary_folder/{{ $ide.name }}"
+
+download_folder=$(mktemp --directory)
+echo "[{{ $ide.name }}] Working in $download_folder"
+
+release_info_file="$download_folder/latest-release-info"
+latest_release_file="$download_folder/latest-release"
+
+release_url='https://data.services.jetbrains.com/products/releases?code={{ $ide.code }}&latest=true&type={{ $releaseType }}'
+release_query='.{{ $ide.code }}[0] | del(.whatsnew) | del(.notesLink) | del(.licenseRequired) | del(.uninstallFeedbackLinks) | del(.printableReleaseType)'
+
+if curl --silent --fail --location --header 'Accept: application/json' "$release_url" --output "$release_info_file"; then
+    echo "[{{ $ide.name }}] Downloaded latest release info"
+else
+    echo "[{{ $ide.name }}] Error: failed to download latest release info" 1>&2
+    exit 1
+fi
+
+if ! jq --exit-status "$release_query" < "$release_info_file" > "$latest_release_file"; then
+    echo "[{{ $ide.name }}] Error: failed to parse latest release" 1>&2
+    exit 1
+fi
+
+latest_release=$(cat "$latest_release_file")
+latest_version=$(echo "$latest_release" | jq -r '.version')
+
+echo "[{{ $ide.name }}] Latest version is $latest_version"
+
+latest_bin_link=$(echo "$latest_release" | jq -r '.downloads.{{ $os }}.link')
+latest_sha_link=$(echo "$latest_release" | jq -r '.downloads.{{ $os }}.checksumLink')
+
+latest_archive=$(basename "$latest_bin_link")
+latest_checksum="$latest_archive.sha256"
+
+latest_install_folder="$install_folder/{{ $ide.name}}-$latest_version"
+
+if [ -d "$latest_install_folder" ]; then
+    echo "[{{ $ide.name }}] Already at the latest version, skipping..."
+else
+    leftover_versions=()
+    for version in "$install_folder/{{ $ide.name }}-*"; do
+        leftover_versions+=($version)
+    done
+
+    latest_binary="$latest_install_folder/bin/{{ $ide.name }}.sh"
+    latest_icon="$latest_install_folder/bin/{{ $ide.name }}.svg"
+
+    echo "[{{ $ide.name }}] Installing into $latest_install_folder"
+
+    echo "[{{ $ide.name }}] Downloading binary from $latest_bin_link"
+    download_bin="$download_folder/$latest_archive"
+
+    if curl --silent --fail --location "${latest_bin_link}" --output "${download_bin}"; then
+        echo "[{{ $ide.name }}] Downloaded latest binary"
+    else
+        echo "[{{ $ide.name }}] Error: failed to download ${latest_bin_link}" 1>&2
+        exit 1
+    fi
+
+    echo "[{{ $ide.name }}] Downloading checksum from $latest_sha_link"
+    download_sha="$download_folder/$latest_checksum"
+
+    if curl --silent --fail --location "${latest_sha_link}" --output "${download_sha}"; then
+        echo "[{{ $ide.name }}] Downloaded latest checksum"
+    else
+        echo "[{{ $ide.name }}] Error: failed to download ${latest_sha_link}" 1>&2
+        exit 1
+    fi
+
+    if ! cd "$download_folder" > /dev/null; then
+        echo "[{{ $ide.name }}] Error: cannot change to $download_folder" 1>&2
+        exit 1
+    fi
+
+    if sha256sum --status --check "$latest_checksum"; then
+        echo "[{{ $ide.name }}] Checksum matches"
+    else
+        echo "[{{ $ide.name }}] Error: checksum mismatch" 1>&2
+        exit 1
+    fi
+
+    if mkdir --parents "$latest_install_folder"; then
+        echo "[{{ $ide.name }}] Created install folder $latest_install_folder"
+    else
+        echo "[{{ $ide.name }}] Error: failed to create install folder $latest_install_folder" 1>&2
+        exit 1
+    fi
+
+    if tar --extract --gzip \
+        --file="$download_bin" \
+        --directory="$latest_install_folder" \
+        --strip-components=1; then
+        echo "[{{ $ide.name }}] Extracted $download_bin into $latest_install_folder"
+    else
+        echo "[{{ $ide.name }}] Error: failed to extract $download_bin into $latest_install_folder" 1>&2
+        exit 1
+    fi
+
+    if [ -x "$latest_binary" ]; then
+        echo "[{{ $ide.name }}] $latest_binary is an executable file"
+    else
+        echo "[{{ $ide.name }}] Error: $latest_binary is not an executable file" 1>&2
+        exit 1
+    fi
+
+    if ln --symbolic --force "$latest_binary" "$binary_target"; then
+        echo "[{{ $ide.name }}] Linked $latest_binary to $binary_target"
+    else
+        echo "[{{ $ide.name }}] Error: failed to link $latest_binary to $binary_target" 1>&2
+        exit 1
+    fi
+
+    #if [ -f "$latest_icon" ]; then
+    #    echo "[{{ $ide.name }}] $latest_icon is a file"
+    #else
+    #    echo "[{{ $ide.name }}] Error: $latest_icon is not a file" 1>&2
+    #    exit 1
+    #fi
+
+    #if ln --symbolic --force "$latest_icon" "$icon_target"; then
+    #    echo "[{{ $ide.name }}] Linked $latest_icon to $icon_target"
+    #else
+    #    echo "[{{ $ide.name }}] Error: failed to link $latest_icon to $icon_target" 1>&2
+    #    exit 1
+    #fi
+
+    if rm --recursive --force "$download_folder"; then
+        echo "[{{ $ide.name }}] Cleaned up $download_folder"
+    else
+        echo "[{{ $ide.name }}] Error: failed to clean up $download_folder"
+        exit 1
+    fi
+
+    notify-send --app-name "jetbrains-installer" \
+        --urgency low \
+        "{{ $ide.name }} $latest_version installed"
+    
+    for version in "${leftover_versions[@]}"; do
+        if rm --recursive --force "$install_folder/$version"; then
+            echo "[{{ $ide.name }}] Cleaned up leftover version $version"
+        else
+            echo "[{{ $ide.name }}] Error: failed to clean up leftover version $version" 1>&2
+            exit 1
+        fi
+    done
+fi
+
+{{ end }}
