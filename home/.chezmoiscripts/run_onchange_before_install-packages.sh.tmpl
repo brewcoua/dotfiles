@@ -7,6 +7,7 @@
 
 {{ $packageList := list -}}
 {{ $repositoryList := list -}}
+{{ $keyringedList := list -}}
 
 {{ range .packages.apt -}}
 {{   $package := . -}}
@@ -14,16 +15,29 @@
 {{     $packageList = mustAppend $packageList $package.name -}}
 {{   end -}}
 {{   if hasKey $package "repository" -}}
-{{     $repositoryList = mustAppend $repositoryList $package.repository -}}
+{{     if hasKey $package "keyring" -}}
+{{       $keyringedList = mustAppend $keyringedList $package -}}
+{{     else -}}
+{{       $repositoryList = mustAppend $repositoryList $package.repository -}}
+{{     end -}}
 {{   end -}}
 {{ end -}}
 
 #!/bin/bash
 set -eufo pipefail{{ "\n" }}
 
-{{- range $repositoryList -}}
+{{ range $keyringedList -}}
+{{   $package := . -}}
+if [ ! -f /etc/apt/sources.list.d/{{ $package.name }}.list ]; then
+    wget -qO- {{ $package.keyring.source }} | gpg --dearmor > {{ $package.keyring.name }}
+    {{ $sudo }}install -D -o root -g root -m 644 {{ $package.keyring.name }} /etc/apt/keyrings/{{ $package.keyring.name }}
+    {{ $sudo }}sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/{{ $package.keyring.name }}] {{ $package.repository }}" > /etc/apt/sources.list.d/{{ $package.name }}.list'
+fi
+{{ end -}}
+
+{{ range $repositoryList -}}
 {{ $sudo }}add-apt-repository -y {{ . }}
-{{- end -}}
+{{ end -}}
 
 {{ "\n" }}
 {{ $sudo }}apt-get update

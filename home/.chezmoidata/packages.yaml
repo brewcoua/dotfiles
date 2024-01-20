@@ -4,6 +4,7 @@ packages:
     - name: git
     - name: gnupg gpg
     - name: curl wget
+    - name: software-properties-common apt-transport-https
 
     - name: neovim
     - name: terminator
@@ -23,10 +24,16 @@ packages:
     - name: make
     - name: cmake
 
+    - name: code
+      keyring:
+        name: packages.microsoft.gpg
+        source: https://packages.microsoft.com/keys/microsoft.asc
+      repository: https://packages.microsoft.com/repos/code stable main
+
     - name: gnome-tweaks
     - name: papirus-icon-theme
       repository: "ppa:papirus/papirus"
 
   snap:
     - firefox
-  
+
