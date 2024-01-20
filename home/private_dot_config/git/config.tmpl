@@ -1,16 +1,16 @@
 [name]
-    name = Brewen Couaran
-    email = 45310490+brewcoua@users.noreply.github.com
-    signingkey = 7B5D8E73CC72848C
+	name = Brewen Couaran
+	email = 45310490+brewcoua@users.noreply.github.com
+	signingkey = 7B5D8E73CC72848C
 [commit]
-    gpgsign = true
+	gpgsign = true
 [advice]
-    addEmptyPathspec = false
-    pushNonFastForward = false
-    statusHints = false
+	addEmptyPathspec = false
+	pushNonFastForward = false
+	statusHints = false
 [alias]
-    a = add
-    al = add .
+	a = add
+	al = add .
 	ap = add -p
 	amc = am --continue
 	b = branch
@@ -37,7 +37,7 @@
 	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	p = push
 	pf = push --force-with-lease
-    pl = pull
+	pl = pull
 	prb = pull --rebase
 	r = restore
 	ra = rebase --abort
@@ -52,37 +52,37 @@
 	su = submodule update
 	wd = diff --patience --word-diff
 [color]
-    ui = auto
+	ui = auto
 [core]
-    editor = nvim
-    whitespace = trailing-space,space-before-tab
+	editor = nvim
+	whitespace = trailing-space,space-before-tab
 [diff]
-    algorithm = histogram
-    renamelimit = 8192
-    renames = copies
+	algorithm = histogram
+	renamelimit = 8192
+	renames = copies
 [fetch]
-    fsckobjects = false
-    prune = true
+	fsckobjects = false
+	prune = true
 [init]
-    defaultBranch = master
+	defaultBranch = master
 [pager]
-    branch = false
-    grep = false
+	branch = false
+	grep = false
 [push]
-    default = current
+	default = current
 [rebase]
-    autosquash = true
-    autostash = true
+	autosquash = true
+	autostash = true
 [receive]
-    fsckobjects = true
+	fsckobjects = true
 [status]
-    submoduleSummary = true
+	submoduleSummary = true
 [transfer]
-    fsckobjects = true
+	fsckobjects = true
 [trim]
-    bases = master,gh-pages
+	bases = master,gh-pages
 {{- if .personal -}}
 [url "git@github.com:brewcoua/"]
-    insteadOf = https://github.com/brewcoua/
+	insteadOf = https://github.com/brewcoua/
 {{- end -}}
 {{/* vim: set filetype=gitconfig: */}}
