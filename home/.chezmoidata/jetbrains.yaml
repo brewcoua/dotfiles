@@ -1,0 +1,10 @@
+jetbrains:
+  ide:
+    - idea-ultimate
+    - webstorm
+    - rust-rover
+    - clion
+
+  plugin:
+    - com.jetbrains.gerryPurpleTheme
+    - com.github.copilot
