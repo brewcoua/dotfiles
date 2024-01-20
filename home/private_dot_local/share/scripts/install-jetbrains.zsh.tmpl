@@ -164,8 +164,8 @@ else
 
     notify-send -a "jetbrains-installer" \
         -u low \
-        -i "$icon_target"
-        "{{ $ide.name }} $latest_version"
+        -i "$icon_target" \
+        "{{ $ide.name }} $latest_version" \
         "Successfully updated {{ $ide.name }} to its latest version."
     
     for version in "${leftover_versions[@]}"; do
