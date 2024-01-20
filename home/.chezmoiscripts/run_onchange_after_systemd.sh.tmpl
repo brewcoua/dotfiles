@@ -17,3 +17,5 @@ if ! systemctl is-active --user {{ . }}.timer > /dev/null; then
     {{ $sudo }}systemctl start --user {{ . }}.timer
 fi
 {{ end }}
+
+zsh $HOME/scripts/install-jetbrains.zsh

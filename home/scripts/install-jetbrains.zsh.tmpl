@@ -49,6 +49,12 @@ latest_install_folder="$install_folder/{{ $ide.name}}-$latest_version"
 
 if [ -d "$latest_install_folder" ]; then
     echo "[{{ $ide.name }}] Already at the latest version, skipping..."
+    if rm --recursive --force "$download_folder"; then
+        echo "[{{ $ide.name }}] Cleaned up $download_folder"
+    else
+        echo "[{{ $ide.name }}] Error: failed to clean up $download_folder"
+        exit 1
+    fi
 else
     leftover_versions=()
     for version in "$install_folder/{{ $ide.name }}-*"; do
