@@ -5,6 +5,7 @@ packages:
     - name: gnupg gpg
     - name: curl wget
     - name: software-properties-common apt-transport-https
+    - name: libfuse2
 
     - name: neovim
     - name: terminator
@@ -30,7 +31,7 @@ packages:
         source: https://packages.microsoft.com/keys/microsoft.asc
       repository: https://packages.microsoft.com/repos/code stable main
 
-    - name: gnome-tweaks
+    - name: gnome-tweaks menulibre
     - name: papirus-icon-theme
       repository: "ppa:papirus/papirus"
 

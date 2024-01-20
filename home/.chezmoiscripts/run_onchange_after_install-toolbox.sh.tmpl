@@ -1,0 +1,23 @@
+{{ if and (eq .chezmoi.os "linux") (not (lookPath "jetbrains-toolbox")) -}}
+
+TOOLBOX_DOWNLOADS = $(curl -fsSL 'https://data.services.jetbrains.com/products/releases?code=TBA&latest=true&type=release' | jq -r '.TBA[0].downloads.linux')
+
+TOOLBOX_CHECKSUM_URL = $(echo $TOOLBOX_DOWNLOADS | jq -r '.checksumLink')
+TOOLBOX_ARCHIVE_URL = $(echo $TOOLBOX_DOWNLOADS | jq -r '.link')
+
+TOOLBOX_ARCHIVE = $(basename "$TOOLBOX_ARCHIVE_URL")
+
+wget -q "$TOOLBOX_ARCHIVE_URL"
+wget -q "$TOOLBOX_CHECKSUM_URL"
+
+IS_VALID = $(sha256sum -c "$TOOLBOX_ARCHIVE.sha256")
+if [ ! IS_VALID -eq 1 ]; then
+    echo "toolbox> Error: downloaded invalid archive (checksum mismatch)"
+else
+    tar -xf "$TOOLBOX_ARCHIVE"
+    . "./${TOOLBOX_ARCHIVE%.*.*}/jetbrains-toolbox"
+    rm -r "./${TOOLBOX_ARCHIVE%.*.*}"
+    echo "toolbox> Finished installing jetbrains-toolbox"
+fi
+
+{{ end -}}

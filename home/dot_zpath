@@ -16,7 +16,7 @@ fi
 
 if [ -d "$HOME/.local/share/JetBrains/Toolbox" ]; then
      export TOOLBOX_INSTALL="$HOME/.local/share/JetBrains/Toolbox"
-     export PATH="$TOOLBOX_INSTALL/scripts:$PATH"
+     export PATH="$TOOLBOX_INSTALL/scripts:$TOOLBOX_INSTALL/bin:$PATH"
 fi
 
 
