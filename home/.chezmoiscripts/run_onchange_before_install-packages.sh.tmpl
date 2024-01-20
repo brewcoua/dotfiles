@@ -29,10 +29,10 @@ set -eufo pipefail{{ "\n" }}
 {{ range $keyringedList -}}
 {{   $package := . -}}
 if [ ! -f /etc/apt/sources.list.d/{{ $package.name }}.list ]; then
-    wget -qO- {{ $package.keyring.source }} | gpg --dearmor > {{ $package.keyring.name }}
-    {{ $sudo }}install -D -o root -g root -m 644 {{ $package.keyring.name }} /etc/apt/keyrings/{{ $package.keyring.name }}
-    {{ $sudo }}sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/{{ $package.keyring.name }}] {{ $package.repository }}" > /etc/apt/sources.list.d/{{ $package.name }}.list'
-    rm {{ $package.keyring.name }}
+    curl -fsSL {{ $package.keyring.source }} | \
+        {{ $sudo }}gpg --dearmor --output /usr/share/keyrings/{{ $package.keyring.name }}
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/{{ $package.keyring.name }}] {{ $package.repository }}" | \
+        {{ $sudo }}tee /etc/apt/sources.list.d/{{ $package.name }}.list
 fi
 {{ end -}}
 

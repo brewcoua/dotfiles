@@ -27,7 +27,7 @@ packages:
 
     - name: code
       keyring:
-        name: packages.microsoft.gpg
+        name: microsoft.gpg
         source: https://packages.microsoft.com/keys/microsoft.asc
       repository: https://packages.microsoft.com/repos/code stable main
 
