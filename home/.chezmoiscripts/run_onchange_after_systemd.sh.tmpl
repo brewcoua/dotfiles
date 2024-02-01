@@ -1,16 +1,22 @@
+{{ if (and (not .ephemeral) (not .headless)) -}}
 #!/bin/bash
 
-{{range(list
-    "jetbrains-installer") }}
-if ! systemctl is-enabled --user {{ . }}.service > /dev/null; then
-    systemctl enable --user {{ . }}.service
+{{ range(.services) -}}
+{{   $target := . -}}
+{{   if hasKey $target "service" -}}
+if ! systemctl is-enabled --user {{ $target.service }} > /dev/null; then
+    systemctl enable --user {{ $target.service }}
 fi
-if ! systemctl is-enabled --user {{ . }}.timer > /dev/null; then
-    systemctl enable --user {{ . }}.timer
+systemctl start --user {{ $target.service }}
+{{   end -}}
+{{   if hasKey $target "timer" -}}
+if ! systemctl is-enabled --user {{ $target.timer }} > /dev/null; then
+    systemctl enable --user {{ $target.timer }}
 fi
-if ! systemctl is-active --user {{ . }}.timer > /dev/null; then
-    systemctl start --user {{ . }}.timer
+if ! systemctl is-active --user {{ $target.timer }} > /dev/null; then
+    systemctl start --user {{ $target.timer }}
 fi
-{{ end }}
+{{   end -}}
+{{ end -}}
 
-zsh $HOME/.local/share/scripts/install-jetbrains.zsh
+{{ end -}}

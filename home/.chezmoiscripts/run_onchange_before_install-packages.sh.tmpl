@@ -22,7 +22,6 @@
 {{     end -}}
 {{   end -}}
 {{ end -}}
-
 #!/bin/bash
 set -eufo pipefail{{ "\n" }}
 
@@ -44,8 +43,8 @@ fi
 {{ $sudo }}apt-get update
 {{ $sudo }}apt-get install -y {{ $packageList | join " " }}
 
-{{ if lookPath "snap" }}
-{{   range .packages.snap }}
+{{ if lookPath "snap" -}}
+{{   range .packages.snap -}}
 if snap list {{ . }} &> /dev/null; then
     SNAP_NAME={{ . }}
     SNAP_INFO=$(snap info $SNAP_NAME)
@@ -66,7 +65,7 @@ else
     echo "snap> Installing {{ . }}"
     {{ $sudo }}snap install {{ . }}
 fi
-{{   end }}
-{{ end }}
+{{   end -}}
+{{ end -}}
 
-{{- end -}}
+{{ end -}}
