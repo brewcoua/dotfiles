@@ -1,0 +1,6 @@
+{{ if (and (not .ephemeral) (not .headless)) -}}
+#!/bin/bash
+
+jb install {{ .jetbrains.ide | join " " }}
+
+{{ end -}}

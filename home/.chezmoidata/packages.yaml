@@ -25,12 +25,6 @@ packages:
     - name: make
     - name: cmake
 
-    - name: code
-      keyring:
-        name: microsoft.gpg
-        source: https://packages.microsoft.com/keys/microsoft.asc
-      repository: https://packages.microsoft.com/repos/code stable main
-
     - name: gnome-tweaks menulibre
     - name: papirus-icon-theme
       repository: "ppa:papirus/papirus"

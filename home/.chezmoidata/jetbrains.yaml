@@ -1,16 +1,10 @@
 jetbrains:
   folder: "JetBrains"
   ide:
-    - name: idea
-      code: IIU
-    - name: webstorm
-      code: WS
-    - name: rustrover
-      code: RR
-      type: eap
-    - name: clion
-      code: CLN
-      type: eap
+    - idea-ultimate
+    - webstorm
+    - rustrover
+    - clion-nova
 
   plugin:
     - com.jetbrains.gerryPurpleTheme

@@ -41,6 +41,14 @@
   path = "gdu_linux_amd64"
   refreshPeriod = "168h"
 
+{{- $jbVersionTag := (gitHubLatestRelease "brewcoua/jb").TagName }}
+[".local/bin/jb"]
+  type = "archive-file"
+  url = "https://github.com/brewcoua/jb/releases/download/{{ $jbVersionTag }}/jb_x86_64-unknown-linux-gnu.tar.gz"
+  executable = true
+  path = "jb"
+  refreshPeriod = "168h"
+
 {{- if and (not .ephemeral) (not .headless) }}
 {{-   $fontDir := ".local/share/fonts" }}
 {{-   range (list
