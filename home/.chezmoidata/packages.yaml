@@ -28,6 +28,10 @@ packages:
     - name: gnome-tweaks menulibre
     - name: papirus-icon-theme
       repository: "ppa:papirus/papirus"
+    
+    - name: tlp tlp-rdw
+      repository: universe
+      laptop: true
 
   snap:
     - firefox

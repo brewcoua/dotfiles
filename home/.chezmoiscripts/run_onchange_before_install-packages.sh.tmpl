@@ -8,13 +8,18 @@
 {{ $packageList := list -}}
 {{ $repositoryList := list -}}
 
+{{ $laptop := .laptop -}}
+
 {{ range .packages.apt -}}
 {{   $package := . -}}
-{{   if hasKey $package "name" -}}
-{{     $packageList = mustAppend $packageList $package.name -}}
-{{   end -}}
-{{   if hasKey $package "repository" -}}
-{{     $repositoryList = mustAppend $repositoryList $package.repository -}}
+{{   if and (hasKey $package "laptop") (eq $package.laptop true) (eq $laptop true) -}}
+{{   else -}}
+{{     if hasKey $package "name" -}}
+{{       $packageList = mustAppend $packageList $package.name -}}
+{{     end -}}
+{{     if hasKey $package "repository" -}}
+{{       $repositoryList = mustAppend $repositoryList $package.repository -}}
+{{     end -}}
 {{   end -}}
 {{ end -}}
 #!/bin/bash
@@ -22,9 +27,8 @@ set -eufo pipefail{{ "\n" }}
 
 {{ range $repositoryList -}}
 {{ $sudo }}add-apt-repository -y {{ . }}
-{{ end -}}
+{{ end }}
 
-{{ "\n" }}
 {{ $sudo }}apt-get update
 {{ $sudo }}apt-get install -y {{ $packageList | join " " }}
 

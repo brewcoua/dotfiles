@@ -1,6 +1,7 @@
 {{- $ephemeral := false -}}{{/* Cloud or VM instances */}}
 {{- $headless := false -}}{{/* No screen and keyboard */}}
 {{- $personal := false -}}{{/* Should be using personal secrets */}}
+{{- $laptop := false -}}{{/* Should use laptop-specific settings */}}
 {{- "" -}}
 
 {{- $osID := .chezmoi.os -}}
@@ -31,6 +32,10 @@
 {{-   end -}}
 {{- end -}}
 
+{{- if not (hasPrefix (output "ls" "/sys/class/power_supply") "ls:") -}}
+{{-   $laptop = true -}}
+{{- end -}}
+
 umask = 0o022
 
 [data]
@@ -40,6 +45,7 @@ umask = 0o022
     ephemeral = {{ $ephemeral }}
     headless = {{ $headless }}
     personal = {{ $personal }}
+    laptop = {{ $laptop }}
 
 [github]
     refreshPeriod = "12h"
