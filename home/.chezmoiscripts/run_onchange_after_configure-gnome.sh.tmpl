@@ -1,4 +1,4 @@
-{{ if (and (not .ephemeral) (not .headless)) -}}
+{{ if (and (not .ephemeral) (not .headless) (eq .desktop "gnome")) -}}
 #!/bin/bash
 
 set -eufo pipefail
@@ -6,8 +6,6 @@ set -eufo pipefail
 fc-cache
 
 gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
-
-gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
 
 gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
 profile=$(gsettings get org.gnome.Terminal.ProfilesList default)
@@ -25,4 +23,48 @@ gsettings set org.gnome.shell favorite-apps "[ \
 ]"
 
 gsettings set org.gnome.mutter.keybindings switch-monitor "[]"
+
+extensions=( {{ .gnome.extensions | join " " }} )
+for extension in "${extensions[@]}"
+do
+    if ! gnome-extensions info ${extension} > /dev/null; then
+        busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s ${extension}
+        
+        # Add schemas for gsettings
+        if [ -d "$HOME/.local/share/gnome-shell/extensions/${extension}/schemas" ]; then
+            glib-compile-schemas "$HOME/.local/share/gnome-shell/extensions/${extension}/schemas"
+        fi
+
+        echo "gnome> Installed ${extension}"
+    fi
+done
+
+if [[ " ${extensions[*]} " =~ [[:space:]]"user-theme@gnome-shell-extensions.gcampax.github.com"[[:space:]] ]]; then
+    glib-compile-schemas $HOME/.local/share/gnome-shell/extensions/user-theme@gnome-shell-extensions.gcampax.github.com/schemas/
+fi
+
+# Download and install theme
+SHELL_THEME="Marble-pink-dark"
+
+if ! [ -d "$HOME/.themes/$SHELL_THEME" ]; then
+    TEMP_DIR=$(mktemp -d)
+    cd $TEMP_DIR
+
+    git clone https://github.com/imarkoff/Marble-shell-theme.git
+    cd Marble-shell-theme
+
+    python3 install.py --pink --mode=dark
+
+    cd -- > /dev/null
+    rm -rf $TEMP_DIR
+
+    echo "gnome> Installed theme $SHELL_THEME"
+fi
+ 
+# Themes
+gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+gsettings set org.gnome.desktop.interface gtk-theme "Yaru-red-dark"
+gsettings set org.gnome.desktop.wm.preferences theme "Adwaita"
+gsettings set org.gnome.shell.extensions.user-theme name "$SHELL_THEME"
+
 {{ end -}}

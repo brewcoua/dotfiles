@@ -2,6 +2,7 @@
 {{- $headless := false -}}{{/* No screen and keyboard */}}
 {{- $personal := false -}}{{/* Should be using personal secrets */}}
 {{- $laptop := false -}}{{/* Should use laptop-specific settings */}}
+{{- $desktop := "unknown" -}}{{/* Desktop environment (e.g. GNOME) */}}
 {{- "" -}}
 
 {{- $osID := .chezmoi.os -}}
@@ -36,6 +37,12 @@
 {{-   $laptop = true -}}
 {{- end -}}
 
+{{- if eq (output "ls" "/usr/bin/gnome-session") "/usr/bin/gnome-session\n" -}}
+{{-   $desktop = "gnome" -}}
+{{- else if stdinIsATTY -}}
+{{-   $desktop = promptStringOnce . "desktop" "desktop" -}}
+{{- end -}}
+
 umask = 0o022
 
 [data]
@@ -45,7 +52,9 @@ umask = 0o022
     ephemeral = {{ $ephemeral }}
     headless = {{ $headless }}
     personal = {{ $personal }}
+
     laptop = {{ $laptop }}
+    desktop = {{ $desktop | quote }}
 
 [github]
     refreshPeriod = "12h"

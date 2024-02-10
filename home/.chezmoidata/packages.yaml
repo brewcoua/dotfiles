@@ -24,6 +24,7 @@ packages:
     - name: g++
     - name: make
     - name: cmake
+    - name: python3
 
     - name: gnome-tweaks menulibre
     - name: papirus-icon-theme

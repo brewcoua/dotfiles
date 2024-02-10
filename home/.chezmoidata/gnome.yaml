@@ -1,0 +1,13 @@
+gnome:
+  extensions:
+    - extension-list@tu.berry
+    - clipboard-indicator@tudmotu.com
+    - user-theme@gnome-shell-extensions.gcampax.github.com
+    - Move_Clock@rmy.pobox.com
+    - caffeine@patapon.info
+    - apps-menu@gnome-shell-extensions.gcampax.github.com
+    - Vitals@CoreCoding.com
+    - ding@rastersoft.com
+    - tiling-assistant@ubuntu.com
+    - ubuntu-appindicators@ubuntu.com
+    - ubuntu-dock@ubuntu.com
