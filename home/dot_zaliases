@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 alias g="git"
+alias gs="git s"
 alias gnp="git --no-pager"
 
 alias zcp="zmv -C" zln="zmv -L"
