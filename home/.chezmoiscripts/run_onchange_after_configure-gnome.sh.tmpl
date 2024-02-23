@@ -39,9 +39,8 @@ do
     fi
 done
 
-if [[ " ${extensions[*]} " =~ [[:space:]]"user-theme@gnome-shell-extensions.gcampax.github.com"[[:space:]] ]]; then
-    glib-compile-schemas $HOME/.local/share/gnome-shell/extensions/user-theme@gnome-shell-extensions.gcampax.github.com/schemas/
-fi
+# Make sure we do have the user themes schema
+glib-compile-schemas $HOME/.local/share/gnome-shell/extensions/user-theme@gnome-shell-extensions.gcampax.github.com/schemas/
 
 # Download and install theme
 SHELL_THEME="Marble-pink-dark"
