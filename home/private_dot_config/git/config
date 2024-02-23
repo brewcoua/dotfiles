@@ -82,8 +82,6 @@
 	fsckobjects = true
 [trim]
 	bases = master,gh-pages
-{{- if .personal -}}
-[url "git@github.com:brewcoua/"]
-	insteadOf = https://github.com/brewcoua/
-{{- end -}}
-{{/* vim: set filetype=gitconfig: */}}
+
+[includeIf "gitdir:~/cwd/university/"]
+	path = "~/.config/git/config.university"
