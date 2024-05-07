@@ -4,7 +4,7 @@ jetbrains:
     - idea-ultimate
     - webstorm
     - rustrover
-    - clion-nova
+    - clion
 
   plugin:
     - com.jetbrains.gerryPurpleTheme
