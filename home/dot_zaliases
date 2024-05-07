@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+alias sudo="sudo env PATH=$PATH"
+
 alias g="git"
 alias gs="git s"
 alias gnp="git --no-pager"
