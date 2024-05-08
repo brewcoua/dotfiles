@@ -1,7 +1,6 @@
 gnome:
   extensions:
     - extension-list@tu.berry
-    - clipboard-indicator@tudmotu.com
     - user-theme@gnome-shell-extensions.gcampax.github.com
     - Move_Clock@rmy.pobox.com
     - caffeine@patapon.info
