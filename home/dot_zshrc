@@ -16,7 +16,7 @@ DISABLE_AUTO_UPDATE="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 plugins=(
-	git z sudo dirhistory
+	z sudo dirhistory
 	copyfile copybuffer
 	jsontools
 	zsh-syntax-highlighting
