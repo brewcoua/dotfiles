@@ -1,0 +1,6 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+
+curl -fsS https://pkgx.sh | sh
+
+{{ end -}}
