@@ -7,3 +7,5 @@ alias gs="git s"
 alias gnp="git --no-pager"
 
 alias zcp="zmv -C" zln="zmv -L"
+
+alias pnpx="pnpm exec"
