@@ -2,7 +2,7 @@ gnome:
   extensions:
     - extension-list@tu.berry
     - user-theme@gnome-shell-extensions.gcampax.github.com
-    - Move_Clock@rmy.pobox.com
+    - dash-to-panel@jderose9.github.com
     - caffeine@patapon.info
     - apps-menu@gnome-shell-extensions.gcampax.github.com
     - Vitals@CoreCoding.com
@@ -10,3 +10,4 @@ gnome:
     - tiling-assistant@ubuntu.com
     - ubuntu-appindicators@ubuntu.com
     - ubuntu-dock@ubuntu.com
+    - 
